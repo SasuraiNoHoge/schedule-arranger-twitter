@@ -14,6 +14,11 @@ var GITHUB_CLIENT_ID = config.github.clientId;
 var GITHUB_CLIENT_SECRET = config.github.clientSecret;
 var GITHUB_CALLBACKURL = config.github.callbackURL;
 
+var TwitterStrategy = require('passport-twitter').Strategy;
+var TWITTER_CONSUMER_KEY = config.twitter.consumerKey;
+var TWITTER_CONSUMER_SECRET = config.twitter.consumerSecret;
+var TWITTER_CALLBACKURL = config.twitter.callbackURL;
+
 passport.serializeUser(function (user, done) {
   done(null, user);
 });
@@ -22,7 +27,7 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 
-
+//Githubでログイン
 passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
@@ -30,6 +35,19 @@ passport.use(new GitHubStrategy({
 },
   function (accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
+      return done(null, profile);
+    });
+  }
+));
+
+//Twitterでログイン
+passport.use(new TwitterStrategy({
+  consumerKey: TWITTER_CONSUMER_KEY,
+  consumerSecret: TWITTER_CONSUMER_SECRET,
+  callbackURL: TWITTER_CALLBACKURL
+},
+function (accessToken, refreshToken, profile, done) {
+  process.nextTick(function () {
       return done(null, profile);
     });
   }
@@ -70,6 +88,18 @@ app.get('/auth/github/callback',
   function (req, res) {
     res.redirect('/');
 });
+
+app.get('/auth/twitter',
+  passport.authenticate('twitter', { scope: ['user:email'] }),
+  function (req, res) {
+});
+
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  function (req, res) {
+    res.redirect('/');
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
