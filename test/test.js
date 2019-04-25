@@ -37,4 +37,3 @@ describe('/logout', () => {
       .expect(302, done);
   });
 });
-  
