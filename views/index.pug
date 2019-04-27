@@ -3,3 +3,23 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  div
+    if user
+      div
+        a(href="/logout") #{user.username} をログアウト
+      div
+        a(href="/schedules/new") 小説を投稿
+      - var hasSchedule = schedules.length > 0
+      if hasSchedule
+        h3 作品一覧
+        table.table
+          tr
+            th 作品名
+            th 更新日時
+          each schedule in schedules
+            tr
+              td
+                a(href=`/schedules/${schedule.scheduleId}`) #{schedule.scheduleName}
+              td #{schedule.updatedAt}
+    else
+      a(href="/login") ログイン

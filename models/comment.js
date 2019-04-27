@@ -13,11 +13,6 @@ const Comment = loader.database.define('comments', {
     primaryKey: true,
     allowNull: false
   },
-  provider: {
-    type: Sequelize.STRING,
-    primaryKey: true,
-    allowNull: false
-  },
   comment: {
     type: Sequelize.STRING,
     allowNull: false
